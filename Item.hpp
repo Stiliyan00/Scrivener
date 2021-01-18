@@ -106,6 +106,7 @@ void Ax::info() const
 
 class Bow : public Item
 {
+    public:
     Bow(const string name_ = "Bow", const double added_power = 8.5);
     void info();
 };
