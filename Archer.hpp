@@ -9,6 +9,7 @@ private:
 public:
     Archer();
     Archer(const double power);
+    Archer(const string name);
     Archer(const double power, const string name);
     Archer(const double power, const string name, const string race);
 
@@ -16,6 +17,8 @@ public:
     virtual double attact()const override;
     virtual double attact(const Item item) override;
     virtual void info()const override;
+    virtual void print_items()const override;
+    virtual Item get_last_added_item()const override;
 };
 
 Archer::Archer() : Charecter()
@@ -26,6 +29,11 @@ Archer::Archer() : Charecter()
 Archer::Archer(const double power_) : Charecter()
 {
     power = power_;
+}
+
+Archer::Archer(const string name) : Charecter(name)
+{
+    power = 8.5;
 }
 
 Archer::Archer(const double power_, const string name) : Charecter(name)
@@ -82,7 +90,23 @@ void Archer::info() const
     Charecter::info();
 }
 
+void Archer::print_items() const
+{
+    for (auto it = items.begin(); it != items.end(); ++it)
+    {
+        it->info();
+    }
+}
 
+Item Archer::get_last_added_item() const
+{
+    if(!items.empty())
+    {
+        return items.front();
+    }
+    throw runtime_error ("NO AVAILABLE ITEMS");
+
+}
 
 
 #endif // _ARCHER_H_
