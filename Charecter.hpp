@@ -6,11 +6,13 @@
 #include <iterator>
 #include <algorithm>
 #include "Item.hpp"
+#include <stdexcept>
 
 using std::string;
 using std::cout;
 using std::cin;
 using std::list;
+using std::runtime_error;
 
 class Charecter
 {
@@ -37,6 +39,8 @@ public:
     virtual double attact(const Item weapone);
     void get_injured(const double damage);
     virtual void info()const;
+    virtual void print_items()const;
+    virtual Item get_last_added_item()const;
 };
 
 Charecter::Charecter()
@@ -169,6 +173,23 @@ void Charecter::info() const
     {
         it->info();
     }
+}
+
+void Charecter::print_items() const
+{
+    for (auto it = items.begin(); it != items.end(); ++it)
+    {
+        it->info();
+    }
+}
+
+Item Charecter::get_last_added_item() const
+{
+    if(!items.empty())
+    {
+        return items.front();
+    }
+    throw runtime_error ("NO AVAILABLE ITEMS");
 }
 
 
