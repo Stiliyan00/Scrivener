@@ -8,6 +8,8 @@
 #include "Item.hpp"
 #include "Graph.hpp"
 #include <cstdlib>
+#include <chrono>
+#include <thread>
 
 ///Сцената ще е статична и всеки път ще е една и съща
 ///и няма да има как да се подава др
@@ -16,6 +18,7 @@ class Scrivener
 private:
     Charecter hero;
     Graph<int> stages;
+    ///chudovishtata sa spored stages:
     vector<Monster> monsters;
     int currentStage;
     void receiveDamage();
@@ -25,6 +28,8 @@ public:
     Scrivener(const Charecter hero);
     Scrivener(const Charecter hero, vector<Monster> monsters);
 
+    void change_hero(const Charecter hero_);
+
     void OpenMinsteryBox();
     void stageInfo()const;
     void Go();
@@ -32,6 +37,9 @@ public:
     ///shte se vzima ot health sled kato napravi toi atakata
     void attactMonster();
     void info()const;
+    void hero_info()const;
+    Monster get_current_level_monster()const;
+
 };
 
 Scrivener::Scrivener()
@@ -570,6 +578,11 @@ Scrivener::Scrivener(const Charecter hero_, vector<Monster>monsters_)
     stages.addEdge(73,74);
 }
 
+void Scrivener::change_hero(const Charecter hero_)
+{
+    hero = hero_;
+}
+
 void Scrivener::info()const
 {
     cout << "HERO : \n";
@@ -607,17 +620,121 @@ void Scrivener::stageInfo() const
 
 void Scrivener::Go()
 {
-    ///currentStage = stages[currentStage][0].get_value();
+    currentStage = stages.get_current_node()->get_data(1);
 }
 
 void Scrivener::Go(const string direction)
 {
-
+    if(direction == "left")
+    {
+        currentStage = stages.get_current_node()->get_data(1);
+        return;
+    }
+    if(direction == "middle")
+    {
+        if(stages.get_current_node()->related.size() < 3)
+        {
+            cerr << "INVALID INPUT\n";
+            return;
+        }
+        else
+        {
+            currentStage = stages.get_current_node()->get_data(2);
+            return;
+        }
+    }
+    if(direction == "right")
+    {
+        if(stages.get_current_node()->related.size() == 2)
+        {
+            currentStage = stages.get_current_node()->get_data(2);
+            return;
+        }
+        else if(stages.get_current_node()->related.size() == 3)
+        {
+            currentStage = stages.get_current_node()->get_data(3);
+            return;
+        }
+        else
+        {
+            cerr << "INVALID INPUT\n";
+            return;
+        }
+    }
+    cerr << "INVALID INPUT\n";
+    return;
 }
 
 void Scrivener::attactMonster()
 {
+    while(!hero.dead() && !monsters[currentStage].dead())
+    {
+        double heroAttackPower = 0;
+        if(!hero.items_empty())
+        {
+            cout << "Choose a weapon to fight with\n";
+            hero.print_items();
+            string temp;
+            cout << "Enter name: " << endl;
+            cin >> temp;
+            if(temp == "Ax")
+            {
+                Ax a;
+                heroAttackPower = hero.attact(a);
+            }
+            else if(temp == "Spell")
+            {
+                Spell a;
+                heroAttackPower =  hero.attact(a);
+            }
+            else if(temp == "Bow")
+            {
+                Bow a;
+                heroAttackPower =  hero.attact(a);
+            }
+            else
+            {
+                cerr << "INVALID INPUT, YOU WILL TAKE THE WEAPONE WHICH WE CHOOSE FOR YOU\n";
+                heroAttackPower =  hero.attact(hero.get_last_added_item());
+            }
+        }
+        else
+        {
+            heroAttackPower = hero.attact();
+        }
+        monsters[currentStage].get_injured(heroAttackPower);
+            cout << flush;
+            system("cls");
+            cout << "STAGE " << currentStage << " : " << endl;
+            cout << "YOUR OPPONENT'S STATS: " << endl;
+            get_current_level_monster().info();
+            cout << endl;
+            cout << "THE MONSTER IS STRIKING" << endl;
+            hero.get_injured(monsters[currentStage].attact());
 
+            std::this_thread::sleep_for(std::chrono::seconds(6));
+
+            cout << flush;
+            system("cls");
+
+            cout << "STAGE " << currentStage << " : " << endl;
+            cout << "YOUR CURRENT STATS ARE: " << endl;
+            hero.info();
+            cout << endl;
+            std::this_thread::sleep_for(std::chrono::seconds(6));
+
+    }
 }
+
+void Scrivener::hero_info() const
+{
+    hero.info();
+}
+
+Monster Scrivener::get_current_level_monster() const
+{
+    return monsters[currentStage];
+}
+
 
 #endif // _SCRIVENER_H_
