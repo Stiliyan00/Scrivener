@@ -7,6 +7,7 @@
 #include "Charecter.hpp"
 #include "Item.hpp"
 #include "Graph.hpp"
+#include "MisteryBox.hpp"
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -21,6 +22,7 @@ private:
     ///chudovishtata sa spored stages:
     vector<Monster> monsters;
     int currentStage;
+
     void receiveDamage();
 
 public:
@@ -35,7 +37,7 @@ public:
     void Go();
     void Go(const string direction);
     ///shte se vzima ot health sled kato napravi toi atakata
-    void attactMonster();
+    bool attactMonster();
     void info()const;
     void hero_info()const;
     Monster get_current_level_monster()const;
@@ -665,7 +667,7 @@ void Scrivener::Go(const string direction)
     return;
 }
 
-void Scrivener::attactMonster()
+bool Scrivener::attactMonster()
 {
     while(!hero.dead() && !monsters[currentStage].dead())
     {
@@ -705,24 +707,83 @@ void Scrivener::attactMonster()
         monsters[currentStage].get_injured(heroAttackPower);
             cout << flush;
             system("cls");
-            cout << "STAGE " << currentStage << " : " << endl;
-            cout << "YOUR OPPONENT'S STATS: " << endl;
-            get_current_level_monster().info();
+           if(!monsters[currentStage].dead())
+           {
+               cout << "STAGE " << currentStage << " : " << endl;
+                cout << "YOUR OPPONENT'S STATS: " << endl;
+                get_current_level_monster().info();
+                cout << endl;
+                cout << "THE MONSTER IS STRIKING" << endl;
+                hero.get_injured(monsters[currentStage].attact());
+
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+
+                cout << flush;
+                system("cls");
+
+                cout << "STAGE " << currentStage << " : " << endl;
+                cout << "YOUR CURRENT STATS ARE: " << endl;
+                hero.info();
+                cout << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+           }
+
+    }
+    if(!hero.dead())
+    {
+        cout << "CONGRADS!" << endl;
+        cout << "YOU WON THE BATTLE" << endl;
+        cout << "AS A REWARD YOU HAVE EARN A MISTERY BOX, WOULD YOU LIKE TO OPEN IT?" << endl;
+        cout << endl;
+        cout << "Enter \"yes\" or \"no\" : ";
+        string answer;
+        cin >>answer;
+        if (answer =="yes")
+        {
             cout << endl;
-            cout << "THE MONSTER IS STRIKING" << endl;
-            hero.get_injured(monsters[currentStage].attact());
+            MisteryBox misteryBox;
+            int reward = misteryBox.open();
+            if(reward == 0)
+            {
+                cout << "YOU HAVE WON AN AX" << endl;
+                cout << "STATS: " << endl;
+                misteryBox.items[0].info();
+                hero.addItem(misteryBox.items[0]);
+            }
+            if(reward == 1)
+            {
+                cout << "YOU HAVE WON AN SPELL" << endl;
+                cout << "STATS: " << endl;
+                misteryBox.items[1].info();
+                hero.addItem(misteryBox.items[1]);
+            }
+            if(reward == 2)
+            {
+                cout << "YOU HAVE WON AN BOW" << endl;
+                cout << "STATS: " << endl;
+                misteryBox.items[2].info();
+                hero.addItem(misteryBox.items[2]);
+            }
+            if(reward == 3)
+            {
+                cout << "YOU HAVE WON +" << misteryBox.healthReward << "HEALTH" << endl;
+                hero.add_health(misteryBox.healthReward);
+            }
+            if(reward == 4)
+            {
+                cout << "YOU HAVE WON -" << misteryBox.healthReward << "HEALTH" << endl;
+                hero.add_health(misteryBox.healthDown);
+            }
 
-            std::this_thread::sleep_for(std::chrono::seconds(6));
-
-            cout << flush;
-            system("cls");
-
-            cout << "STAGE " << currentStage << " : " << endl;
-            cout << "YOUR CURRENT STATS ARE: " << endl;
-            hero.info();
-            cout << endl;
-            std::this_thread::sleep_for(std::chrono::seconds(6));
-
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(6));
+        currentStage++;
+        return true;
+    }
+    else
+    {
+        cout << "YOU HAVE FAILED THE JOURNEY\n";
+        return false;
     }
 }
 
