@@ -10,6 +10,7 @@ private:
 public:
     Mage();
     Mage(const double power_);
+    Mage(const string name);
     Mage(const double power_ , const string name);
     Mage(const double power_, const string name, const string race);
 
@@ -17,6 +18,8 @@ public:
     virtual double attact()const override;
     virtual double attact(const Item item) override;
     virtual void info()const override;
+    virtual void print_items()const override;
+    virtual Item get_last_added_item()const override;
 };
 
 Mage::Mage() : Charecter()
@@ -27,6 +30,11 @@ Mage::Mage() : Charecter()
 Mage::Mage(const double power_) : Charecter()
 {
     power = power_;
+}
+
+Mage::Mage(const string name) : Charecter(name)
+{
+    power = 10;
 }
 
 Mage::Mage(const double power_, const string name) : Charecter(name)
@@ -84,6 +92,23 @@ void Mage::info() const
     Charecter::info();
 }
 
+void Mage::print_items() const
+{
+    for (auto it = items.begin(); it != items.end(); ++it)
+    {
+        it->info();
+    }
+}
+
+Item Mage::get_last_added_item() const
+{
+    if(!items.empty())
+    {
+        return items.front();
+    }
+    throw runtime_error ("NO AVAILABLE ITEMS");
+
+}
 
 
 #endif // _MAGE_H_
