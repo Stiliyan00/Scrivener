@@ -169,10 +169,13 @@ void Charecter::info() const
 {
     cout << "NAME: " << this->name << endl;
     cout << "RACE: " << this->race << endl;
+    cout << endl;
     for (auto it = items.begin(); it != items.end(); ++it)
     {
         it->info();
+        cout << endl;
     }
+    cout << "HEALTH: " << health << endl;
 }
 
 void Charecter::print_items() const
