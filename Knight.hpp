@@ -9,6 +9,7 @@ private:
 public:
     Knight();
     Knight(const double power_);
+    Knight(const string name);
     Knight(const double power_, const string name_);
     Knight(const double power_, const string name_, const string race);
 
@@ -16,6 +17,8 @@ public:
     virtual double attact()const override;
     virtual double attact(const Item item) override;
     virtual void info()const override;
+    virtual void print_items()const override;
+    virtual Item get_last_added_item()const override;
 };
 
 Knight::Knight() : Charecter()
@@ -26,6 +29,11 @@ Knight::Knight() : Charecter()
 Knight::Knight(const double power_) : Charecter()
 {
     power = power_;
+}
+
+Knight::Knight(const string name) : Charecter(name)
+{
+    power = 9;
 }
 
 Knight::Knight(const double power_, const string name_) : Charecter(name_)
@@ -82,6 +90,22 @@ void Knight::info() const
     Charecter :: info();
 }
 
+void Knight::print_items() const
+{
+    for (auto it = items.begin(); it != items.end(); ++it)
+    {
+        it->info();
+    }
+}
+
+Item Knight::get_last_added_item() const
+{
+    if(!items.empty())
+    {
+        return items.front();
+    }
+    throw runtime_error ("NO AVAILABLE ITEMS");
+}
 
 
 #endif // _KNIGHT_H_
