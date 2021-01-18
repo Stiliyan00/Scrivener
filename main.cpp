@@ -94,7 +94,9 @@ int main()
             switch (commandHelp) {
                 case 'A':
                 {
-                    game.attactMonster();
+                    bool gameFlag = game.attactMonster();
+                    if(!gameFlag) exit = true;
+
                 }; break;
                 case 'O':
                     {
@@ -116,4 +118,3 @@ int main()
 
     return 0;
 }
-
