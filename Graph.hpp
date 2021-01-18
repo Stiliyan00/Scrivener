@@ -2,13 +2,14 @@
 #define _GRAPH_H_
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 
 using namespace std;
 
 template <class T>
 struct GraphNode{
     T data;
-    vector<GraphNode<T>* > related;
+     vector<GraphNode<T>* > related;
 
     GraphNode(const T& data): data(data){}
 
@@ -31,16 +32,28 @@ struct GraphNode{
         }
         cout<<endl;
     }
+
+    T& get_data(const int pos)const{
+        if(pos > related.size())
+        {
+            cerr << "NO SUCH POSSITION\n";
+            T temp;
+            return temp;
+        }
+        return related[pos-1]->data;
+    }
 };
 
 
 template <class T>
 class Graph{
 private:
-    vector<GraphNode<T>* > vertexes;
+     vector<GraphNode<T>* > vertexes;
+     int currentPos;
 
 public:
-    Graph(){}
+    Graph(){currentPos = 0;}
+    Graph(const int currentPos_) : currentPos(currentPos_){}
     ~Graph(){
         for(int i=0; i<vertexes.size(); i++)
             delete vertexes[i];
@@ -68,28 +81,16 @@ public:
         ///node2->addEdgeTo(node1);
     }
 
+    GraphNode<T>* get_current_node()const;
+
+    void set_current_possition(const int newCurrentPossition);
+
     void print() const {
         for(int i=0; i<vertexes.size(); i++){
            vertexes[i]->print();
         }
     }
 
-    class Iterator
-    {
-    private:
-        GraphNode<T>* ptr;
-        Iterator(GraphNode<T>* ptr1);
-        int currentPos;
-
-    public:
-        Iterator();
-
-        T operator*();
-        Iterator operator++();
-        Iterator operator--();
-        bool operator==(const Iterator&)const;
-        bool operator!=(const Iterator&)const;
-    };
 };
 
 Graph<int>* readGraph(){
@@ -104,59 +105,24 @@ Graph<int>* readGraph(){
     return g;
 }
 
-///---------|
-///Iterator:|
-///---------|
+template<typename T>
+GraphNode<T>* Graph<T>::get_current_node() const
+{
+    if(currentPos >= vertexes.size()) throw std::runtime_error("No value");
+    return vertexes[currentPos];
+}
 
 template<typename T>
-Graph<T>::Iterator::Iterator(GraphNode<T>* ptr1)
+void Graph<T>::set_current_possition(const int newCurrentPossition)
 {
-    for(int i = 1; i < vertexes.size(); i++)
+    if(newCurrentPossition > vertexes.size())
     {
-        if(vertexes[i] == ptr1)
-        {
-            currentPos = i;
-        }
+        cerr << "NO SUCH POSSITION\n" << endl;
+        return;
     }
+    currentPos = newCurrentPossition - 1;
 }
 
-template<typename T>
- Graph<T>::Iterator::Iterator()
-{
-    ptr = nullptr;
-    currentPos = 0;
-}
-
-template<typename T>
-T Graph<T>::Iterator::operator*()
-{
-    if(ptr == nullptr) throw std::runtime_error("No value");
-    return ptr->data;
-}
-
-template<typename T>
-typename Graph<T>::Iterator Graph<T>::Iterator::operator++()
-{
-
-}
-
-template<typename T>
-typename Graph<T>::Iterator Graph<T>::Iterator::operator--()
-{
-
-}
-
-template<typename T>
-bool Graph<T>::Iterator::operator==(const Iterator&) const
-{
-
-}
-
-template<typename T>
-bool Graph<T>::Iterator::operator!=(const Iterator&) const
-{
-
-}
 
 
 
