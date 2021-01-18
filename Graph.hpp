@@ -127,4 +127,3 @@ void Graph<T>::set_current_possition(const int newCurrentPossition)
 
 
 #endif // _GRAPH_H_
-

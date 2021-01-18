@@ -47,7 +47,7 @@ double Item::get_power() const
 
 void Item::info() const
 {
-    cout << "Name: " << name << endl;
+    cout << "WEAPON: " << name << endl;
     cout << "Additional power: " << added_power << endl;
 }
 

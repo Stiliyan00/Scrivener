@@ -109,4 +109,3 @@ Item Knight::get_last_added_item() const
 
 
 #endif // _KNIGHT_H_
-
