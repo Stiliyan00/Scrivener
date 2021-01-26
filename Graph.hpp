@@ -36,11 +36,14 @@ struct GraphNode{
     T& get_data(const int pos)const{
         if(pos > related.size())
         {
-            cerr << "NO SUCH POSSITION\n";
-            T temp;
-            return temp;
+            throw std::runtime_error("No value");
         }
         return related[pos-1]->data;
+    }
+
+    int size()const
+    {
+        return this->related.size();
     }
 };
 
@@ -83,6 +86,10 @@ public:
 
     GraphNode<T>* get_current_node()const;
 
+    GraphNode<T>* operator[](const int pos);
+
+    int get_current_possition()const{return this->currentPos;};
+
     void set_current_possition(const int newCurrentPossition);
 
     void print() const {
@@ -106,18 +113,27 @@ Graph<int>* readGraph(){
 }
 
 template<typename T>
+GraphNode<T>* Graph<T>::operator[](const int pos)
+{
+    if(pos > vertexes.size())
+        throw std::runtime_error("No value on this position");
+
+    return vertexes[pos - 1];
+}
+
+template<typename T>
 GraphNode<T>* Graph<T>::get_current_node() const
 {
-    if(currentPos >= vertexes.size()) throw std::runtime_error("No value");
+    if(vertexes.size() < currentPos) throw std::runtime_error("No value no this position");
     return vertexes[currentPos];
 }
 
 template<typename T>
 void Graph<T>::set_current_possition(const int newCurrentPossition)
 {
-    if(newCurrentPossition > vertexes.size())
+    if(vertexes.size() < newCurrentPossition)
     {
-        cerr << "NO SUCH POSSITION\n" << endl;
+        throw std::runtime_error("No vertex on this position");
         return;
     }
     currentPos = newCurrentPossition - 1;
