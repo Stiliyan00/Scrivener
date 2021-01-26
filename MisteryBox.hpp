@@ -13,11 +13,13 @@ int rand();
 
 struct MisteryBox
 {
-     vector<Item> items;
-     double healthReward;
-     double healthDown;
+    vector<Item> items;
+    double healthReward;
+    double healthDown;
+    string word; ///Scrivener
+    static int counter;
 
-    MisteryBox()
+    MisteryBox() : word("Scrivener")
     {
         Ax a;
         Spell s;
@@ -32,7 +34,7 @@ struct MisteryBox
 
     int open()
     {
-        int reward = rand() % 5;
+        int reward = rand() % 6;
         if(reward == 3)
         {
             healthReward = rand()%50;
@@ -40,11 +42,30 @@ struct MisteryBox
         if(reward == 4)
         {
             double healtDownTemp = rand()%30;
+            healthDown = 0;
             healthDown -= healtDownTemp;
         }
+
+        if(reward == 5)
+        {
+            counter++;
+        }
+
         return reward;
     }
+
+    char get_prev_letter()const
+    {
+        return word[counter - 1];
+    }
+
+    int get_counter()const
+    {
+        return counter;
+    }
 };
+
+int MisteryBox::counter = 0;
 
 
 #endif // _MISTERYBOX_H_
