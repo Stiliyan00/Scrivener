@@ -20,13 +20,19 @@ private:
     string name;
     string race;
     double health;
+    int lives;
+
 protected:
     list<Item> items;
 public:
     Charecter();
     Charecter(const string name_);
+    Charecter(const string name_, const int lives_);
     Charecter(const string name_, const string race_);
+    Charecter(const string name_, const string race_, const int lives_);
     Charecter(const string name_, const string race_, const list<Item> items_);
+
+    virtual Charecter* clone()const;
 
     bool dead()const;
     bool items_full()const;
@@ -48,6 +54,7 @@ Charecter::Charecter()
     name = "NAMELESS";
     race = "Hero";
     health = 100.0;
+    lives = 3;
 }
 
 Charecter::Charecter(const string name_)
@@ -55,13 +62,32 @@ Charecter::Charecter(const string name_)
     name = name_;
     race = "Hero";
     health = 100.0;
+    lives = 3;
 }
+
+Charecter::Charecter(const string name_, const int lives_)
+{
+    name = name_;
+    lives = lives_;
+    race = "Hero";
+    health = 100.0;
+}
+
 
 Charecter::Charecter(const string name_, const string race_)
 {
     name = name_;
     race = race_;
     health = 100.0;
+    lives = 3;
+}
+
+Charecter::Charecter(const string name_, const string race_, const int lives_)
+{
+    name = name_;
+    race = race_;
+    health = 100.0;
+    lives = lives_;
 }
 
 Charecter::Charecter(const string name_, const string race_, const list<Item> items_)
@@ -77,11 +103,18 @@ Charecter::Charecter(const string name_, const string race_, const list<Item> it
         counter++;
     }
     health = 100.0;
+    lives = 3;
 }
+
+Charecter* Charecter::clone() const
+{
+    return new Charecter(*this);
+}
+
 
 bool Charecter::dead() const
 {
-    return health <= 0.0;
+    return lives <= 0;
 }
 
 double Charecter::attact() const
@@ -106,10 +139,27 @@ double Charecter::attact(const Item weapone)
 void Charecter::get_injured(const double damage)
 {
     health -= damage;
+    if(health <= 0.0)
+    {
+        lives--;
+        health += health;
+    }
 }
 
 void Charecter::add_health(const double add)
 {
+    if(health == 100.0 && lives == 3) return;
+    else if(health + add > 100.0 && lives == 3)
+    {
+        health = 100.0;
+        return;
+    }
+    else if(health + add > 100.0 && lives < 3)
+    {
+        lives++;
+        health = (health + add) - 100.0;
+        return;
+    }
     health += add;
 }
 
@@ -169,13 +219,12 @@ void Charecter::info() const
 {
     cout << "NAME: " << this->name << endl;
     cout << "RACE: " << this->race << endl;
-    cout << endl;
     for (auto it = items.begin(); it != items.end(); ++it)
     {
         it->info();
-        cout << endl;
     }
     cout << "HEALTH: " << health << endl;
+    cout << endl;
 }
 
 void Charecter::print_items() const
