@@ -17,7 +17,8 @@ public:
     Item(const string name_, const double added_power_);
 
     double get_power()const;
-    void info()const;
+    string get_name()const;
+    virtual void info()const;
 
     bool operator==(const Item& otherItem);
 };
@@ -45,6 +46,11 @@ double Item::get_power() const
     return this->added_power;
 }
 
+string Item::get_name() const
+{
+    return this->name;
+}
+
 void Item::info() const
 {
     cout << "WEAPON: " << name << endl;
@@ -62,7 +68,7 @@ class Spell : public Item
 {
 public:
     Spell(const string name_ = "Spell", const double added_power = 10);
-    void info()const;
+    virtual void info()const override;
 };
 
 Spell::Spell(const string name_, const double added_power) : Item(name_, added_power)
