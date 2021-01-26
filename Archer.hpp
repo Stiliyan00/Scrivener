@@ -13,6 +13,8 @@ public:
     Archer(const double power, const string name);
     Archer(const double power, const string name, const string race);
 
+    virtual Charecter* clone()const override;
+
     virtual void addItem(const Item newItem) override;
     virtual double attact()const override;
     virtual double attact(const Item item) override;
@@ -23,7 +25,7 @@ public:
 
 Archer::Archer() : Charecter()
 {
-    power = 8.5;
+    power = 100;
 }
 
 Archer::Archer(const double power_) : Charecter()
@@ -33,7 +35,7 @@ Archer::Archer(const double power_) : Charecter()
 
 Archer::Archer(const string name) : Charecter(name)
 {
-    power = 8.5;
+    power = 100;
 }
 
 Archer::Archer(const double power_, const string name) : Charecter(name)
@@ -45,6 +47,12 @@ Archer::Archer(const double power_, const string name, const string race) : Char
 {
     power = power_;
 }
+
+Charecter* Archer::clone() const
+{
+    return new Archer(*this);
+}
+
 
 void Archer::addItem(const Item newItem)
 {
@@ -81,6 +89,12 @@ double Archer::attact(const Item item)
         if(*it == item) isFound = true;
     }
     if(!isFound) return power;
+    if(item.get_name() == "Bow")
+    {
+        ///ako sme izbrali podhodqshtoto oryjie da e po 2 silata na udara;
+        ///cout << 2 * item.get_power() << endl;
+        return power + (2 * item.get_power());
+    }
     return power + item.get_power();
 }
 
@@ -88,6 +102,7 @@ void Archer::info() const
 {
     cout << "POWER: " << power << endl;
     Charecter::info();
+    cout << "Race specification: Archer" << endl;
 }
 
 void Archer::print_items() const
