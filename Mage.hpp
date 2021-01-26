@@ -14,6 +14,8 @@ public:
     Mage(const double power_ , const string name);
     Mage(const double power_, const string name, const string race);
 
+    virtual Charecter* clone()const override;
+
     virtual void addItem(const Item newItem) override;
     virtual double attact()const override;
     virtual double attact(const Item item) override;
@@ -46,6 +48,12 @@ Mage::Mage(const double power_, const string name, const string race) : Charecte
 {
     power = power_;
 }
+
+Charecter* Mage::clone() const
+{
+    return new Mage(*this);
+}
+
 
 void Mage::addItem(const Item newItem)
 {
@@ -83,6 +91,11 @@ double Mage::attact(const Item item)
         if(*it == item) isFound = true;
     }
     if(!isFound) return power;
+    if(item.get_name() == "Spell")
+    {
+        ///ako sme izbrali podhodqshtoto oryjie da e po 2 silata na udara;
+        return power + (2 * item.get_power());
+    }
     return power + item.get_power();
 }
 
@@ -90,6 +103,7 @@ void Mage::info() const
 {
     cout << "POWER : " << power << endl;
     Charecter::info();
+    cout << "Race specification: Mage" << endl;
 }
 
 void Mage::print_items() const
