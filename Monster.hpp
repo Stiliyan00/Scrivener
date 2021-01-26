@@ -12,30 +12,36 @@ public:
     Monster(const double power_, const string name_);
     Monster(const double power_, const string name_, const string race);
 
+    virtual Charecter* clone()const override;
 ///    virtual void addItem(const Item newItem) override = delete;
     virtual double attact()const override;
     virtual double attact(const Item item) override;
     virtual void info()const override;
 };
 
-Monster::Monster() : Charecter("Monster", "Monster")
+Monster::Monster() : Charecter("Monster", "Monster",1)
 {
     power = 5;
 }
 
-Monster::Monster(const double power_) : Charecter("Monster", "Monster")
+Monster::Monster(const double power_) : Charecter("Monster", "Monster",1)
 {
     power = power_;
 }
 
-Monster::Monster(const double power_, const string name_) : Charecter(name_, "Monster")
+Monster::Monster(const double power_, const string name_) : Charecter(name_, "Monster",1)
 {
     power = power_;
 }
 
-Monster::Monster(const double power_, const string name_, const string race) : Charecter(name_, race)
+Monster::Monster(const double power_, const string name_, const string race) : Charecter(name_, race,1)
 {
     power = power_;
+}
+
+Charecter* Monster::clone() const
+{
+    return new Monster(*this);
 }
 
 double Monster::attact() const

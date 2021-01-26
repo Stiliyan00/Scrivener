@@ -13,6 +13,8 @@ public:
     Knight(const double power_, const string name_);
     Knight(const double power_, const string name_, const string race);
 
+    virtual Charecter* clone()const override;
+
     virtual void addItem(const Item newItem) override;
     virtual double attact()const override;
     virtual double attact(const Item item) override;
@@ -44,6 +46,11 @@ Knight::Knight(const double power_, const string name_) : Charecter(name_)
 Knight::Knight(const double power_, const string name_, const string race) : Charecter(name_, race)
 {
     power = power_;
+}
+
+Charecter* Knight::clone() const
+{
+    return new Knight(*this);
 }
 
 void Knight::addItem(const Item newItem)
@@ -81,6 +88,11 @@ double Knight::attact(const Item item)
         if(*it == item) isFound = true;
     }
     if(!isFound) return power;
+    if(item.get_name() == "Ax")
+    {
+        ///ako sme izbrali podhodqshtoto oryjie da e po 2 silata na udara;
+        return power + (2 * item.get_power());
+    }
     return power + item.get_power();
 }
 
@@ -88,6 +100,7 @@ void Knight::info() const
 {
     cout << "POWER: " << power << endl;
     Charecter :: info();
+    cout << "Race specification: Knight" << endl;
 }
 
 void Knight::print_items() const
