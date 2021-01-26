@@ -12,7 +12,7 @@ int main()
     cout << "WELLCOME TO SCRINEVER" << endl;
     cout << endl;
 
-    cout << "ENTER \"START\" to begin the journey or \"CLOSE\" to quit the game" << endl;
+    cout << "ENTER \"START\" to begin the journey or \"QUIT\" to quit the game" << endl;
     string start;
     cin >> start;
     if(start != "START" && start != "QUIT")
@@ -21,7 +21,7 @@ int main()
         system("cls");
         cout << "INVALID ENTERED COMMAND, PLEASE TRY AGAIN:D" << endl;
         cout << endl;
-        cout << "ENTER \"START\" to begin the journey or \"CLOSE\" to quit the game" << endl;
+        cout << "ENTER \"START\" to begin the journey or \"QUIT\" to quit the game" << endl;
         cin >> start;
     }
 
@@ -50,7 +50,7 @@ int main()
             cout << "CHOOSE A NAME: ";
             string name;
             cin >> name;
-            Mage temp(name);
+            Mage* temp = new Mage(name);
             game.change_hero(temp);
         }
         else if(t == "archer")
@@ -58,7 +58,7 @@ int main()
             cout << "CHOOSE A NAME: ";
             string name;
             cin >> name;
-            Archer temp(name);
+            Archer* temp = new Archer(name);
             game.change_hero(temp);
         }
         else
@@ -66,7 +66,7 @@ int main()
             cout << "CHOOSE A NAME: ";
             string name;
             cin >> name;
-            Knight temp(name);
+            Knight* temp = new Knight(name);
             game.change_hero(temp);
         }
         string command;
@@ -98,15 +98,6 @@ int main()
                     if(!gameFlag) exit = true;
 
                 }; break;
-                case 'O':
-                    {
-                    }; break;
-
-                case 'K':
-                    {
-
-                    }; break;
-
 
                 case 'E': exit = true; break;
 
@@ -114,7 +105,5 @@ int main()
             }
         } while (!exit);
     }
-    if(start == "QUIT") return 0;
-
     return 0;
 }
